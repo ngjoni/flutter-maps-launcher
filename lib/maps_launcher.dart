@@ -4,12 +4,13 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class MapsLauncher {
   /// Returns a URL that can be launched on the current platform
   /// to open a maps application showing the result of a search query.
   static String createQueryUrl(String query) {
-    var uri;
+    Uri uri;
 
     if (kIsWeb) {
       uri = Uri.https(
@@ -30,7 +31,7 @@ class MapsLauncher {
   /// to open a maps application showing coordinates ([latitude] and [longitude]).
   static String createCoordinatesUrl(double latitude, double longitude,
       [String? label]) {
-    var uri;
+    Uri uri;
 
     if (kIsWeb) {
       uri = Uri.https('www.google.com', '/maps/search/',
@@ -60,7 +61,8 @@ class MapsLauncher {
   /// Returns a Future that resolves to true if the maps application
   /// was launched successfully, false otherwise.
   static Future<bool> launchQuery(String query) {
-    return launch(createQueryUrl(query));
+    return launchUrlString(createQueryUrl(query),
+        mode: LaunchMode.externalApplication);
   }
 
   /// Launches the maps application for this platform.
@@ -69,6 +71,7 @@ class MapsLauncher {
   /// was launched successfully, false otherwise.
   static Future<bool> launchCoordinates(double latitude, double longitude,
       [String? label]) {
-    return launch(createCoordinatesUrl(latitude, longitude, label));
+    return launchUrlString(createCoordinatesUrl(latitude, longitude, label),
+        mode: LaunchMode.externalApplication);
   }
 }
